@@ -44,7 +44,7 @@ this.currentUserSource.next(user);
 
   logout(){
     localStorage.removeItem('user');
-    this.currentUserSource = new ReplaySubject<User>();
+    //this.currentUserSource.next(null);// = new ReplaySubject<User>();
 
   }
 }
