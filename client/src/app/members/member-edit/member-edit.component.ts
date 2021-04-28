@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { Member } from 'src/app/_models/member';
 import { AccountService } from 'src/app/_services/account.service';
-import { MembersService } from 'src/app/_services/member.service';
+import { MembersService } from 'src/app/_services/members.service';
 import { take } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { NgForm } from '@angular/forms';
@@ -16,11 +16,10 @@ export class MemberEditComponent implements OnInit {
   @ViewChild('editForm') editForm : NgForm;
   member: Member;
   user: User;
-  @HostListener('windowbeforeunload',['$event']) unloadNotification($event: any) {
-    if(this.editForm.dirty){
-      
-      $event.returnValue = true;
 
+  @HostListener('window:beforeunload',['$event']) unloadNotification($event: any) { 
+    if(this.editForm.dirty){  
+      $event.returnValue = true;
     }
   }
 
@@ -31,6 +30,7 @@ export class MemberEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadMember();
   }
 
   loadMember() {
