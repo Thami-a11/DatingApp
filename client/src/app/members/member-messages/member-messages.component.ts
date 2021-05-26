@@ -12,12 +12,13 @@ import { MessageService } from 'src/app/_services/message.service';
   styleUrls: ['./member-messages.component.css']
 })
 export class MemberMessagesComponent implements OnInit {
-@ViewChild('messageForm') messageForm: NgForm;
-@Input() messages: Message[]; 
-@Input() username: string;
-messageContent: string; 
- 
-  constructor(public  messageService: MessageService) { 
+  @ViewChild('messageForm') messageForm: NgForm;
+  @Input() messages: Message[];
+  @Input() username: string;
+  messageContent: string;
+  loading = false;
+
+  constructor(public messageService: MessageService) {
 
   }
 
@@ -25,11 +26,12 @@ messageContent: string;
 
   }
   sendMessage() {
-    this.messageService.sendMessage(this.username, this.messageContent).then(()=> {
+    this.loading = true;
+    this.messageService.sendMessage(this.username, this.messageContent).then(() => {
       this.messageForm.reset();
-    });
+    }).finally(()=> this.loading = false);
   }
-  
-  
+
+
 
 }
