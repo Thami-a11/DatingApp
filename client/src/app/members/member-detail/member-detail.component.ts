@@ -38,7 +38,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     });
 
     this.route.queryParams.subscribe(params => {
-      params.tabs ? this.selectTab(params.tabs) : this.selectTab(0);
+      params.tab ? this.selectTab(params.tab) : this.selectTab(0);
     });
 
     this.galleryOptions = [
