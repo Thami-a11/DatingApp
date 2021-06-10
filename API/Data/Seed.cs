@@ -22,7 +22,8 @@ namespace API.Data
             {
                 new AppRole{Name="Member"},
                 new AppRole{Name="Admin"},
-                new AppRole{Name="Moderator"}
+                new AppRole{Name="Moderator"},
+                new AppRole{Name="VIP"}
                 
             };
 

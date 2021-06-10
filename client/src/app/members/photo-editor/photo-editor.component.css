@@ -2,7 +2,29 @@ img.img-thumnail {
     height: 100px;
     min-width: 100px !important;
     margin-bottom: 2px;
+    position: relative;
+    text-align: center;
 }
+
+.imgOpacity {
+    opacity: 0.2;   
+  }
+.imgDefualtOpacity {
+    opacity: 1;   
+  }
+.container {
+    position: relative;
+    text-align: center;
+  }
+  
+  /* Bottom left text */
+  .bottom-left {
+    position: absolute;
+    bottom: 34px;
+    left: 40px;
+    color: red;
+    opacity: 0.8;  
+  }
 
 .nv-file-over {
     border: dotted 3px red;

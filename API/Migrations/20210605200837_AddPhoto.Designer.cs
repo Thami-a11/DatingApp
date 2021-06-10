@@ -3,14 +3,16 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210605200837_AddPhoto")]
+    partial class AddPhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,9 +246,6 @@ namespace API.Migrations
                     b.Property<string>("Url")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
@@ -267,24 +266,6 @@ namespace API.Migrations
                     b.HasIndex("LikedUserId");
 
                     b.ToTable("Likes");
-                });
-
-            modelBuilder.Entity("API.Entities.UserVisits", b =>
-                {
-                    b.Property<int>("SourceUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("VisitedUserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("SourceUserId", "VisitedUserId");
-
-                    b.HasIndex("VisitedUserId");
-
-                    b.ToTable("Visits");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -446,25 +427,6 @@ namespace API.Migrations
                     b.Navigation("SourceUser");
                 });
 
-            modelBuilder.Entity("API.Entities.UserVisits", b =>
-                {
-                    b.HasOne("API.Entities.AppUser", "SourceUser")
-                        .WithMany("VisitedUsers")
-                        .HasForeignKey("SourceUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Entities.AppUser", "VisitedUser")
-                        .WithMany("VisitedByUsers")
-                        .HasForeignKey("VisitedUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SourceUser");
-
-                    b.Navigation("VisitedUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("API.Entities.AppRole", null)
@@ -519,10 +481,6 @@ namespace API.Migrations
                     b.Navigation("Photos");
 
                     b.Navigation("UserRoles");
-
-                    b.Navigation("VisitedByUsers");
-
-                    b.Navigation("VisitedUsers");
                 });
 
             modelBuilder.Entity("API.Entities.Group", b =>

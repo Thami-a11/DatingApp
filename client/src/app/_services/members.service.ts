@@ -68,7 +68,6 @@ getMembers(userParams: UserParams) {
     if(member){
       return of(member);
     }
-
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
 
@@ -97,6 +96,16 @@ getMembers(userParams: UserParams) {
     let params = getPaginationHeaders(pageNumber, pageSize);
     params = params.append('predicate', predicate);
      return getPaginatedResults<Partial<Member[]>>(this.baseUrl + 'likes', params,this.http);
+  }
+
+  addVisits(username: string) {
+    return this.http.post(this.baseUrl + 'Visits/' + username, {});
+  }
+  
+  getVisits(predicate: string, pageNumber,pageSize) {
+    let params = getPaginationHeaders(pageNumber, pageSize);
+    params = params.append('predicate', predicate);
+     return getPaginatedResults<Partial<Member[]>>(this.baseUrl + 'Visits', params,this.http);
   }
   
  

@@ -19,6 +19,7 @@ export class PhotoEditorComponent implements OnInit {
   hasBaseDropzoneOver = false;
   baseUrl = environment.apiUrl; 
   user: User;
+  
 
   constructor(private accountService: AccountService, private memberService: MembersService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe(user=> this.user =user);
@@ -79,5 +80,7 @@ export class PhotoEditorComponent implements OnInit {
       }
     };
   }
+
+
 
 }

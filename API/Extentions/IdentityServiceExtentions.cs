@@ -57,6 +57,7 @@ namespace API.Extensions {
             {
                 opt.AddPolicy("RequireAdminRole",policy=>policy.RequireRole("Admin"));
                 opt.AddPolicy("ModeratePhotoRole",policy=>policy.RequireRole("Admin","Moderator"));
+                opt.AddPolicy("RequireVIPRole",policy=>policy.RequireRole("VIP"));
             });
             return services;
         }

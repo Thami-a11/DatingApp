@@ -18,8 +18,6 @@ namespace API.Controllers {
     [Authorize]
     public class UsersController : BaseApiController {
 
-
-
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
         private readonly IUnitOfWork _unitOfWork;
@@ -37,8 +35,8 @@ namespace API.Controllers {
 
         public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers ([FromQuery] UserParams userParams) {
 
-            var gender = await _unitOfWork.UserRepository.GetUserGender(User.GetUsername ());
-            userParams.CurrentUsername = User.GetUsername();
+            var gender = await _unitOfWork.UserRepository.GetUserGender (User.GetUsername ());
+            userParams.CurrentUsername = User.GetUsername ();
 
             if (string.IsNullOrEmpty (userParams.Gender)) {
                 userParams.Gender = gender == "male" ? "female" : "male";
@@ -57,7 +55,7 @@ namespace API.Controllers {
         [HttpGet ("{username}", Name = "GetUser")]
         public async Task<ActionResult<MemberDto>> GetUser (string username) {
 
-            return await _unitOfWork.UserRepository.GetMemberAsync (username);
+            return await _unitOfWork.UserRepository.GetMemberAsync(username, User.GetUsername());
 
         }
 
@@ -70,33 +68,34 @@ namespace API.Controllers {
 
             _unitOfWork.UserRepository.Update (user);
 
-            if (await _unitOfWork.Complete()) return NoContent ();
+            if (await _unitOfWork.Complete ()) return NoContent ();
 
             return BadRequest ("Failed to update user");
         }
 
         [HttpPost ("add-photo")]
         public async Task<ActionResult<PhotoDto>> AddPhoto (IFormFile file) {
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync (User.GetUsername ());
-
-            var result = await _photoService.AddPhotoAsync (file);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername ());
+    
+            var result = await _photoService.AddPhotoAsync(file);
 
             if (result.Error != null) return BadRequest (result.Error.Message);
 
             var photo = new Photo {
                 Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
+                PublicId = result.PublicId,
+                Username = user.UserName
             };
 
-            if (user.Photos.Count == 0) {
-                photo.IsMain = true;
-            }
+            // if (user.Photos.Count == 0) {
+            //     photo.IsMain = true;
+            // }
+            
+            user.Photos.Add(photo);
 
-            user.Photos.Add (photo);
-
-            if (await _unitOfWork.Complete()) {
+            if (await _unitOfWork.Complete ()) {
                 //return 
-                return CreatedAtRoute ("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDto> (photo));
+                return CreatedAtRoute ("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDto>(photo));
             }
 
             return BadRequest ("Problem adding photo");
@@ -114,7 +113,7 @@ namespace API.Controllers {
             if (currentMain != null) currentMain.IsMain = false;
             photo.IsMain = true;
 
-            if (await _unitOfWork.Complete()) return NoContent ();
+            if (await _unitOfWork.Complete ()) return NoContent ();
 
             return BadRequest ("Failed to set main photo");
         }
@@ -136,7 +135,7 @@ namespace API.Controllers {
 
             user.Photos.Remove (photo);
 
-            if (await _unitOfWork.Complete()) return Ok ();
+            if (await _unitOfWork.Complete ()) return Ok ();
 
             return BadRequest ("Failed to delete the photo");
         }

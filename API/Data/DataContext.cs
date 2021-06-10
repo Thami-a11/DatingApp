@@ -15,6 +15,8 @@ namespace API.Data {
         public DbSet<Message> Messages { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Connection> Connections { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<UserVisits> Visits { get; set; }
 
         protected override void OnModelCreating (ModelBuilder builder) {
             base.OnModelCreating (builder);
@@ -23,7 +25,7 @@ namespace API.Data {
                 .HasMany (ur => ur.UserRoles)
                 .WithOne (u => u.User)
                 .HasForeignKey (ur => ur.UserId)
-                .IsRequired ();
+                .IsRequired();
 
             builder.Entity<AppRole> ()
                 .HasMany (ur => ur.UserRoles)
@@ -50,6 +52,23 @@ namespace API.Data {
                 .HasForeignKey (s => s.LikedUserId)
                 .OnDelete (DeleteBehavior.Cascade);
 
+            
+            builder.Entity<UserVisits> ()
+                .HasKey (k => new { k.SourceUserId, k.VisitedUserId });
+
+            
+            builder.Entity<UserVisits> ()
+                .HasOne (s => s.SourceUser)
+                .WithMany (l => l.VisitedUsers)
+                .HasForeignKey (s => s.SourceUserId)
+                .OnDelete (DeleteBehavior.Cascade);        
+
+            builder.Entity<UserVisits> ()
+                .HasOne (s => s.VisitedUser)
+                .WithMany (l => l.VisitedByUsers)
+                .HasForeignKey (s => s.VisitedUserId)
+                .OnDelete (DeleteBehavior.Cascade);    
+
             builder.Entity<Message> ()
                 .HasOne (u => u.Recipient)
                 .WithMany (m => m.MessagesReceived)
@@ -61,6 +80,10 @@ namespace API.Data {
                 .OnDelete (DeleteBehavior.Restrict);
                  
             builder.ApplyUtcDateTimeConverter();
+           
+
+            builder.Entity<Photo>()
+            .HasQueryFilter(p => p.IsApproved);
         }
     }
 
